@@ -21,8 +21,7 @@ app.set("layout", "./layouts/layout") // not at views root
 /* ***********************
  * Routes
  *************************/
-app.use(static)
-
+app.use(require("./routes/static"))
 //Index route
 app.get("/", function(req, res){
   res.render("index", {title: "Home"})
