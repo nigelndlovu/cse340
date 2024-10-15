@@ -25,6 +25,7 @@ app.set("layout", "./layouts/layout") // not at views root
  * Routes
  *************************/
 app.use(require("./routes/static"))
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 //Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
