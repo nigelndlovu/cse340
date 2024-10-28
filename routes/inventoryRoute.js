@@ -1,6 +1,7 @@
 const express = require("express")
 const router = new express.Router() 
 const invController = require("../controllers/invController")
+const invValidate = require("../utilities/inventory-validation")
 
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId);
@@ -13,5 +14,15 @@ router.get('/trigger-error', (req, res, next) => {
   error.status = 500;
   next(error);
 });
+
+router.get('/', invController.buildManagementView);
+
+router.post(
+  "/inv",
+	invValidate.classificationRules(),
+  (req, res) => {
+    res.status(200).send('login process')
+  }
+)
 
 module.exports = router;
