@@ -2,6 +2,9 @@
  * This server.js file is the primary file of the 
  * application. It is used to control the project.
  *******************************************/
+
+//const cookieParser = require("cookie-parser")
+
 /* ***********************
  * Require Statements
  *************************/
@@ -17,10 +20,20 @@ const utilities = require("./utilities");
 const session = require("express-session")
 const pool = require("./database/")
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 
 /* ***********************
  * Middleware
  * ************************/
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+      return next();
+  }
+  res.redirect('/account/login');
+}
+
+app.use(cookieParser)
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -41,6 +54,8 @@ app.use(function(req, res, next){
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+//app.use(cookieParser())
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates
@@ -93,3 +108,5 @@ const host = process.env.HOST
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
+
+module.exports = { ensureAuthenticated };
